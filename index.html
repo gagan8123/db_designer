@@ -1005,8 +1005,20 @@
             }
 
             function rowCenterY(table, idx) {
-                return table.y + HEAD_H + idx * ROW_H + ROW_H / 2;
-            }
+    const tblEl = document.getElementById('tbl-' + table.id);
+    if (tblEl) {
+        const rows = tblEl.querySelectorAll('.col-row');
+        const rowEl = rows[idx];
+        if (rowEl) {
+            // offsetTop is relative to the nearest positioned ancestor,
+            // which is the .tbl element itself (position: absolute) —
+            // so this is exact, regardless of actual rendered row height.
+            return table.y + rowEl.offsetTop + rowEl.offsetHeight / 2;
+        }
+    }
+    // fallback only if the element isn't in the DOM yet
+    return table.y + HEAD_H + idx * ROW_H + ROW_H / 2;
+}
 
             function drawArrow(srcTable, srcIdx, tgtTable, tgtIdx) {
                 const sy = rowCenterY(srcTable, srcIdx);
